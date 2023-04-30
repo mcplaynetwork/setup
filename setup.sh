@@ -1,3 +1,9 @@
+#!/bin/bash
+
+function generate_password() {
+    echo $(cat /dev/urandom | tr -dc a-zA-Z0-9 | head -c16)
+}
+
 echo "############ Setup docker ############"
 
 sudo apt-get update
@@ -29,3 +35,35 @@ echo "############ apt-get upgrade ############"
 
 sudo apt-get upgrade -y
 
+echo "############ Generate docker project ############"
+
+mkdir -p ~/docker
+
+echo "############ Setup wings ############"
+
+mkdir -p ~/docker/wings
+cd ~/docker/wings
+
+echo "############ Generate .env ############"
+
+if [ -e .env ]; then
+    cp .env .env.bak
+    rm .env
+fi
+
+touch .env
+MYSQL_PASSWORD=$(generate_password)
+echo "MYSQL_PASSWORD=$MYSQL_PASSWORD" >> .env
+
+echo "############ Create docker-compose.yml ############"
+
+if [ -e docker-compose.yml ]; then
+    cp docker-compose.yml docker-compose.yml.bak
+    rm docker-compose.yml
+fi
+
+wget https://raw.githubusercontent.com/mcplaynetwork/setup/main/wings/docker-compose.yml
+
+echo "############ Start wings ############"
+
+sudo docker-compose up -d
