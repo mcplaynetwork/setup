@@ -4,6 +4,10 @@ echo "############ Setup timezone ############"
 
 sudo timedatectl set-timezone Asia/Tokyo
 
+echo "############ Setup needrestart ############"
+
+echo "\$nrconf{restart} = 'a';" | sudo tee /etc/needrestart/conf.d/50local.conf
+
 echo "############ Setup docker ############"
 
 sudo apt-get update
