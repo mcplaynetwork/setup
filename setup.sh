@@ -41,12 +41,10 @@ sudo apt-get upgrade -y
 
 echo "############ Portainer agent ############"
 
-sudo docker volume create portainer_data
 sudo docker run -d \
-    --name portainer \
-    -p 8000:8000 \
-    -p 9443:9443 \
+    -p 9001:9001 \
+    --name portainer_agent \
     --restart=always \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -v portainer_data:/data \
-    portainer/portainer-ce:latest
+    -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+    portainer/agent:2.18.2
